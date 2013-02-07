@@ -99,6 +99,8 @@ PUT http://localhost:5984/perception/_design/app
 Finished push. 2-7b4d1456e90c988c6a86b6476d08bfb1
 ```
 
+After perception is deployed, you can access it via its `_rewrite` location: [http://localhost:5984/perception/_design/perception/_rewrite/](http://localhost:5984/perception/_design/perception/_rewrite/)
+
 ## updating perception
 
 After making changes to the source code, you can redeploy the app to couch using the `couchapp push` command as before:
