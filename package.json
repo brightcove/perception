@@ -1,0 +1,16 @@
+{
+  "name" : "perception",
+  "version" : "0.0.1",
+  "description" : "Captures, aggregates and presents human perceived load times.",
+  "homepage" : "https://bithub.brightcove.com/jwilson/perception/",
+  "keywords" : ["client", "browser", "load", "perception"],
+  "author" : "brightcove",
+  "contributors" : [],
+  "dependencies" : {
+    "couchapp" : ">=0.9.1"
+  },
+  "repository" : {
+    "type": "git",
+    "url": "git@bithub.brightcove.com:jwilson/perception.git"
+  }
+}
