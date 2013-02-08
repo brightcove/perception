@@ -5,7 +5,7 @@
 ddoc = 
   { _id:'_design/perception'
   , rewrites : 
-    [ {from:"/", to:'index.html'}
+    [ {from:"/", to:'pages/index.html'}
     , {from:"/api", to:'../../'}
     , {from:"/api/*", to:'../../*'}
     , {from:"/*", to:'*'}
