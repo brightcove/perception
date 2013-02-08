@@ -4,12 +4,55 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title></title>
 <link rel="stylesheet" type="text/css" href="styles/reset.css" />
+<link rel="stylesheet" type="text/css" href="styles/data-table.css" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
 <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
 </head>
 <body>
-<div id="main"></div>
+<div class="main">
+<!--
+  This element is the Sammy application's context element.
+  The registered hash routes are rendered here.
+-->
+</div>
+<script type='text/mustache' class="list-tests">
+  <!--
+    Template for displaying the list of tests.
+  -->
+  <h2>
+    <span>available tests</span>
+  </h2>
+  <p>
+    <a href="/#/add-test"><span>add another...</span></a>
+  </p>
+  <table class="data-table" cellspacing="0">
+    <tbody>
+      <tr>
+        <th class="_id">_id</th>
+        <th class="url">url</th>
+        <th class="description">description</th>
+      </tr>
+      {{#rows}}
+      <tr>
+        {{#value}}
+        <td>{{_id}}</td>
+        <td>{{url}}</td>
+        <td>{{description}}</td>
+        {{/value}}
+      </tr>
+      {{/rows}}
+    </tbody>
+  </table>
+</script>
+<script type='text/mustache' class="add-test">
+  <!--
+    Template for adding a new test.
+  -->
+  <form action="#/add-test" method="post">
+    <input type="submit" value="submit" />
+  </form>
+</script>
 <script src="scripts/jquery-1.9.1.min.js"></script>
 <script src="scripts/jquery.couch.js"></script>
 <script src="scripts/jquery.mustache.js"></script>
