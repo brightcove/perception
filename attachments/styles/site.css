@@ -7,15 +7,34 @@
  * scaffolding
  */
 html, body {
+  background: #a0a0a0;
   font-family: Helvetica, Arial;
   font-size: 12px;
+  height: 100%;
+  width: 100%;
+}
+.frame {
+  background: white;
+  border-left: 1px solid #333;
+  border-right: 1px solid #333;
+  margin: 0 auto;
+  max-width: 600px;
+  min-height: 100%;
+}
+.main {
+  padding: 10px;
 }
 
+/**
+ * presentation elements
+ */
 h2 {
   font-size: 18px;
   font-weight: bold;
 }
-
+p {
+  margin: 10px 0;
+}
 
 /**
  * data tables
@@ -34,4 +53,7 @@ h2 {
 .data-table td {
   border: 1px solid #ccc;
   padding: 5px;
+}
+.data-table p {
+  margin: 0;
 }
