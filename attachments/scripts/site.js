@@ -59,6 +59,9 @@ var
      * handle submission of new test
      */
     this.post('#/add-test', function(context) {
+      
+      console.log(context.params);
+      
     });
     
   });

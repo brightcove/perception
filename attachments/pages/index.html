@@ -26,7 +26,7 @@
     <span>perception tests</span>
   </h2>
   <p>
-    <a href="/#/add-test"><span>add another...</span></a>
+    <a href="#/add-test"><span>add another...</span></a>
   </p>
   <table class="data-table" cellspacing="0">
     <tbody>
@@ -58,7 +58,21 @@
   <h2>
     <span>add a perception test</span>
   </h2>
+  <p>
+    <a href="#/"><span>back to list...</span></a>
+  </p>
   <form action="#/add-test" method="post">
+    <fieldset>
+      <legend>test parameters</legend>
+      <label class="url">
+        <span>url</span>
+        <input type="text" name="url" =>
+      </label>
+      <label class="description">
+        <span>description</span>
+        <textarea name="description"></textarea>
+      </label>
+    </fieldset>
     <input type="submit" value="submit" />
   </form>
 </script>

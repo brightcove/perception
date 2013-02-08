@@ -35,6 +35,9 @@ h2 {
 p {
   margin: 10px 0;
 }
+code {
+  font-family: monospace;
+}
 
 /**
  * data tables
@@ -57,3 +60,29 @@ p {
 .data-table p {
   margin: 0;
 }
+
+/**
+ * forms and fields
+ */
+fieldset {
+  border: 1px solid #ccc;
+  margin: 15px 0 10px;
+  max-width: 300px;
+  padding: 10px 15px 10px 10px;
+  position: relative;
+}
+fieldset legend {
+  background: white;
+  padding: 0 5px;
+  position: absolute;
+  top: -10px;
+  left: 10px;
+}
+fieldset label,
+fieldset label span,
+fieldset label input,
+fieldset label textarea {
+  display: block;
+  width: 100%;
+}
+
