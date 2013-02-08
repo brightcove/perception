@@ -1,0 +1,37 @@
+/**
+ * site.css
+ * styles for the whole app
+ */
+
+/**
+ * scaffolding
+ */
+html, body {
+  font-family: Helvetica, Arial;
+  font-size: 12px;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+/**
+ * data tables
+ */
+.data-table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+}
+.data-table th {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  padding: 5px;
+  text-align: center;
+}
+.data-table td {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
