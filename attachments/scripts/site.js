@@ -59,9 +59,11 @@ var
      * handle submission of new test
      */
     this.post('#/add-test', function(context) {
-      
-      console.log(context.params);
-      
+      db.saveDoc(context.params,{
+        success: function(){
+          app.setLocation('#/');
+        }
+      });
     });
     
   });
