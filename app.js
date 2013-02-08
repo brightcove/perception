@@ -13,7 +13,17 @@ module.exports = {
     {from:"/*", to:'*'}
   ],
   
+  /**
+   * views are map/reduce pairs which transform documents for querying.
+   */
   views: {
+  },
+  
+  /**
+   * lists can aggregate map/reduce results and produce other, non-JSON
+   * forms of output.
+   */
+  lists: {
   },
   
   /**
