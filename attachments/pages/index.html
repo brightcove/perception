@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title></title>
+<title>perception</title>
 <link rel="stylesheet" type="text/css" href="styles/reset.css" />
 <link rel="stylesheet" type="text/css" href="styles/data-table.css" />
 <link rel="stylesheet" type="text/css" href="styles/site.css" />
@@ -10,18 +10,20 @@
 <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
 </head>
 <body>
+<div class="frame">
 <div class="main">
 <!--
   This element is the Sammy application's context element.
   The registered hash routes are rendered here.
 -->
 </div>
-<script type='text/mustache' class="list-tests">
+</div>
+<script type="text/mustache" class="list-tests">
   <!--
-    Template for displaying the list of tests.
+    Template for displaying the list of available tests.
   -->
   <h2>
-    <span>available tests</span>
+    <span>perception tests</span>
   </h2>
   <p>
     <a href="/#/add-test"><span>add another...</span></a>
@@ -29,36 +31,42 @@
   <table class="data-table" cellspacing="0">
     <tbody>
       <tr>
-        <th class="_id">_id</th>
+        <th class="actions">actions</th>
         <th class="url">url</th>
         <th class="description">description</th>
       </tr>
       {{#rows}}
       <tr>
         {{#value}}
-        <td>{{_id}}</td>
-        <td>{{url}}</td>
-        <td>{{description}}</td>
+        <td class="actions">
+          <span class="run"><a href="#/run-test/{{_id}}">run</a></span>
+          <span class="edit"><a href="#/edit-test/{{_id}}">edit</a></span>
+          <span class="delete"><a href="#/delete-test/{{_id}}">delete</a></span>
+        </td>
+        <td class="url"><code>{{url}}</code></td>
+        <td class="description"><p>{{description}}</p></td>
         {{/value}}
       </tr>
       {{/rows}}
     </tbody>
   </table>
 </script>
-<script type='text/mustache' class="add-test">
+<script type="text/mustache" class="add-test">
   <!--
     Template for adding a new test.
   -->
+  <h2>
+    <span>add a perception test</span>
+  </h2>
   <form action="#/add-test" method="post">
     <input type="submit" value="submit" />
   </form>
 </script>
 <script src="scripts/jquery-1.9.1.min.js"></script>
 <script src="scripts/jquery.couch.js"></script>
-<script src="scripts/jquery.mustache.js"></script>
 <script src="scripts/jquery.request.js"></script>
 <script src="scripts/sammy/sammy.js"></script>
-<script src="scripts/sammy/plugins/sammy.mustache.js"></script>
+<script src="scripts/mustache.js"></script>
 <script src="scripts/site.js"></script>
 </body>
 </html>

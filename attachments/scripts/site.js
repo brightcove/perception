@@ -1,7 +1,7 @@
 /**
  * site
  */
-(function(window, document, $){
+(function(window, document, $, Mustache){
 
 var
   
@@ -20,14 +20,11 @@ var
     if (!$elem.length) {
       throw "no templates match the selector: " + selector;
     }
-    return $.mustache($elem.text(), data || {});
+    return Mustache.to_html($elem.text(), data || {});
   },
   
   // initialize the application
   app = window.app = $.sammy('.main', function() {
-    
-    // include a plugin
-    this.use('Mustache');
     
     // user actions to implement:
     // * list existing tests
@@ -69,4 +66,4 @@ var
 // start the application
 app.run('#/');
 
-})(window, document, jQuery);
+})(window, document, jQuery, Mustache);
