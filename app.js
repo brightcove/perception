@@ -17,6 +17,18 @@ module.exports = {
    * views are map/reduce pairs which transform documents for querying.
    */
   views: {
+    
+    /**
+     * list all the documents representing tests that can be run
+     */
+    tests: {
+      map: function(doc) {
+        if (doc.type === 'test') {
+          emit(doc.id, doc);
+        }
+      }
+    }
+    
   },
   
   /**
