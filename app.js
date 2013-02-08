@@ -1,26 +1,31 @@
- var couchapp = require('couchapp')
-  , path = require('path')
-  ;
+const
+  couchapp = require('couchapp'),
+  path = require('path');
 
-ddoc = 
-  { _id:'_design/perception'
-  , rewrites : 
-    [ {from:"/", to:'pages/index.html'}
-    , {from:"/api", to:'../../'}
-    , {from:"/api/*", to:'../../*'}
-    , {from:"/*", to:'*'}
-    ]
+module.exports = {
+  
+  _id: '_design/perception',
+  
+  rewrites: [
+    {from:"/", to:'pages/index.html'},
+    {from:"/api", to:'../../'},
+    {from:"/api/*", to:'../../*'},
+    {from:"/*", to:'*'}
+  ],
+  
+  views: {
+  },
+  
+  /**
+   * validation function for document updates
+   */
+  validate_doc_update: function (newDoc, oldDoc, userCtx) {   
+    if (newDoc._deleted === true && userCtx.roles.indexOf('_admin') === -1) {
+      throw "Only admin can delete documents on this database.";
+    } 
   }
-  ;
+  
+};
 
-ddoc.views = {};
+couchapp.loadAttachments(module.exports, path.join(__dirname, 'attachments'));
 
-ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {   
-  if (newDoc._deleted === true && userCtx.roles.indexOf('_admin') === -1) {
-    throw "Only admin can delete documents on this database.";
-  } 
-}
-
-couchapp.loadAttachments(ddoc, path.join(__dirname, 'attachments'));
-
-module.exports = ddoc;
