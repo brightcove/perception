@@ -24,7 +24,7 @@ module.exports = {
     tests: {
       map: function(doc) {
         if (doc.type === 'test') {
-          emit(doc.id, doc);
+          emit([doc.url, doc.id], doc);
         }
       }
     }
