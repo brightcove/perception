@@ -26,7 +26,7 @@
     <span>perception tests</span>
   </h2>
   <p>
-    <a href="#/edit-test"><span>add a new test...</span></a>
+    <a href="#/add-test"><span>add a new test...</span></a>
   </p>
   <table class="data-table" cellspacing="0">
     <tbody>
@@ -51,32 +51,33 @@
     </tbody>
   </table>
 </script>
-<script type="text/mustache" class="edit-test">
+<script type="text/mustache" class="manage-test">
   <!--
-    Template for adding a new test or editing an existing test.
+    Template for producing a form that manages adding a new test, editing an 
+    existing test or deleting a specified test.
   -->
   <h2>
-    <span>add a perception test</span>
+    <span>{{action}} perception test</span>
   </h2>
   <p>
     <a href="#/"><span>back to list...</span></a>
   </p>
-  <form action="#/save-test" method="post">
-    <fieldset>
+  <form action="#/save-{{action}}-test" method="post">
+    <fieldset class="{{action}}-test">
       <legend>test parameters</legend>
       <label class="url">
         <span>url</span>
-        <input type="text" name="url" value="{{url}}"/>
+        <input type="text" name="url" value="{{url}}" {{modifiable}}/>
       </label>
       <label class="description">
         <span>description</span>
-        <textarea name="description">{{description}}</textarea>
+        <textarea name="description" {{modifiable}}>{{description}}</textarea>
       </label>
     </fieldset>
     {{#_id}}<input type="hidden" name="_id" value="{{_id}}" />{{/_id}}
     {{#_rev}}<input type="hidden" name="_rev" value="{{_rev}}" />{{/_rev}}
     <input type="hidden" name="type" value="test" />
-    <input type="submit" value="submit" />
+    <input type="submit" value="{{label}}" />
   </form>
 </script>
 <script src="scripts/jquery-1.9.1.min.js"></script>

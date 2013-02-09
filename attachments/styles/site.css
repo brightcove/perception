@@ -88,4 +88,12 @@ fieldset label textarea {
   display: block;
   width: 100%;
 }
+fieldset label input,
+fieldset label textarea {
+  border: 1px solid #ccc;
+}
+fieldset input:disabled,
+fieldset textarea:disabled {
+  background: #f0f0f0;
+}
 

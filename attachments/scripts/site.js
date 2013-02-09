@@ -49,25 +49,61 @@ var
     },
     
     /**
-     * add a new test or edit an existing test.
+     * form for adding a new test.
      */
-    editTest: function(context) {
-      if (this.params._id) {
-        db.openDoc(this.params._id, {
-          success: function(doc){
-            context.$element().html(render('.edit-test', doc));
-          }
-        });
-      } else {
-        context.$element().html(render('.edit-test'));
-      }
+    addTestForm: function(context) {
+      context.$element().html(render('.manage-test', {
+        action: 'add',
+        label: 'add'
+      }));
     },
     
     /**
-     * save changes to a test.
+     * form for editing an existing test.
+     */
+    editTestForm: function(context) {
+      db.openDoc(this.params._id, {
+        success: function(doc){
+          context.$element().html(render('.manage-test', $.extend(doc,{
+            action: 'edit',
+            label: 'save'
+          })));
+        }
+      });
+    },
+    
+    /**
+     * save a new or edited test.
      */
     saveTest: function(context) {
       db.saveDoc(context.params,{
+        success: function(){
+          app.setLocation('#/');
+        }
+      });
+    },
+    
+    /**
+     * form for deleting a test
+     */
+    deleteTestForm: function(context) {
+      db.openDoc(this.params._id, {
+        success: function(doc){
+          context.$element().html(render('.manage-test', $.extend(doc, {
+            action: 'delete',
+            label: 'delete',
+            modifiable: 'disabled'
+          })));
+        }
+      });
+    },
+    
+    
+    /**
+     * delete the specified test.
+     */
+    deleteTest: function(context) {
+      db.removeDoc(context.params,{
         success: function(){
           app.setLocation('#/');
         }
@@ -85,10 +121,15 @@ var
     this.get('#/', views.listTests);
     this.get('#/list-tests', views.listTests);
     
-    // adding/editing tests and saving the results
-    this.get('#/edit-test', views.editTest);
-    this.get('#/edit-test/:_id', views.editTest);
-    this.post('#/save-test', views.saveTest);
+    // adding or editing a test and saving the result
+    this.get('#/add-test', views.addTestForm);
+    this.get('#/edit-test/:_id', views.editTestForm);
+    this.post('#/save-add-test', views.saveTest);
+    this.post('#/save-edit-test', views.saveTest);
+    
+    // adding/edit or delete a test and save the results
+    this.get('#/delete-test/:_id', views.deleteTestForm);
+    this.post('#/save-delete-test', views.deleteTest);
     
     // run a test
     this.get('#/run-test/:_id', views.runTest);
