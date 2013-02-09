@@ -186,6 +186,29 @@ var
           resetTest();
         }
       });
+    },
+    
+    /**
+     * analyze the runs for a given test.
+     */
+    analyzeTest: function(context) {
+      db.openDoc(this.params._id, {
+        success: function(doc){
+          db.view('perception/runs', {
+            startkey: doc._id,
+            endkey: doc._id,
+            success: function(runs) {
+              context.$element().html(render('.analyze-test', {
+                stats: [
+                  { key: 'url', value: doc.url },
+                  { key: 'description', value: doc.description },
+                  { key: 'total runs', value: runs.total_rows }
+                ]
+              }));
+            }
+          });
+        }
+      });
     }
     
   },

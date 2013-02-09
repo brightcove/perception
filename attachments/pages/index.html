@@ -99,6 +99,27 @@
     </div>
   </div>
 </script>
+<script type="text/mustache" class="analyze-test">
+  <!--
+    Template for displaying an analysis of the runs of a test.
+  -->
+  <h2>
+    <span>analyze a perception test</span>
+  </h2>
+  <p>
+    <a href="#/"><span>back to list...</span></a>
+  </p>
+  <table class="data-table">
+    <tbody>
+      {{#stats}}
+      <tr>
+        <th>{{key}}</th>
+        <td>{{value}}</td>
+      </tr>
+      {{/stats}}
+    </tbody>
+  </table>
+</script>
 <script src="scripts/jquery-1.9.1.min.js"></script>
 <script src="scripts/jquery.couch.js"></script>
 <script src="scripts/jquery.request.js"></script>
