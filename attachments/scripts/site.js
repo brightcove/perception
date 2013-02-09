@@ -80,13 +80,22 @@ var
    * initialize the Sammy application, specifying routes.
    */
   app = window.app = $.sammy('.main', function() {
+    
+    // main entry point to app lists available tests
     this.get('#/', views.listTests);
     this.get('#/list-tests', views.listTests);
+    
+    // adding/editing tests and saving the results
     this.get('#/edit-test', views.editTest);
     this.get('#/edit-test/:_id', views.editTest);
     this.post('#/save-test', views.saveTest);
-    this.post('#/run-test', views.runTest);
-    this.post('#/analyze-test', views.analyzeTest);
+    
+    // run a test
+    this.get('#/run-test/:_id', views.runTest);
+    
+    // show stats and charts for a test's runs
+    this.get('#/analyze-test/:_id', views.analyzeTest);
+    
   });
 
 // start the application

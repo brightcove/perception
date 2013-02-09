@@ -60,6 +60,9 @@ code {
 .data-table p {
   margin: 0;
 }
+.data-table code {
+  word-break: break-all;
+}
 
 /**
  * forms and fields
