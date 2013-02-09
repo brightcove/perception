@@ -27,6 +27,17 @@ module.exports = {
           emit([doc.url, doc.id], doc);
         }
       }
+    },
+    
+    /**
+     * list all the documents representing runs for tests
+     */
+    runs: {
+      map: function(doc) {
+        if ('test_id' in doc) {
+          emit(doc.test_id, doc);
+        }
+      }
     }
     
   },
