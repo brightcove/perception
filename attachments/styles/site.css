@@ -17,12 +17,14 @@ html, body {
   background: white;
   border-left: 1px solid #333;
   border-right: 1px solid #333;
+  height: 100%;
   margin: 0 auto;
   max-width: 600px;
-  min-height: 100%;
 }
 .main {
-  padding: 10px;
+  height: 100%;
+  padding: 0 10px;
+  position: relative;
 }
 
 /**
@@ -95,5 +97,52 @@ fieldset label textarea {
 fieldset input:disabled,
 fieldset textarea:disabled {
   background: #f0f0f0;
+}
+
+/**
+ * running tests
+ */
+.run-area {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  bottom: 10px;
+  left: 10px;
+  position: absolute;
+  right: 10px;
+  top: 70px;
+}
+.run-area iframe {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+.big-target {
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.big-target.ready {
+  background: #cfc;
+}
+.big-target.running {
+  background: #ffc;
+  opacity: 0.3;
+}
+.big-target.done {
+  background: #fcc;
+  opacity: 0.7;
+}
+.big-button {
+  font-size: 36px;
+  margin: 20px;
+  text-align: center;
+  text-decoration: underline;
 }
 

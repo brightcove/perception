@@ -108,6 +108,84 @@ var
           app.setLocation('#/');
         }
       });
+    },
+    
+    /**
+     * run a given test.
+     */
+    runTest: function(context) {
+      db.openDoc(this.params._id, {
+        success: function(doc){
+          var
+            
+            // set context element content to run-test template, then make
+            // note of the .run-area element
+            $area = context.$element()
+              .html(render('.run-test', doc))
+              .find('.run-area'),
+            
+            // get a handle on the big target which will be used to both
+            // start tests and track when they've loaded
+            $target = $area.find('.big-target'),
+            
+            // start time and stop time
+            startTime,
+            stopTime,
+            
+            /**
+             * click handler for starting the test
+             */
+            startTest = function(){
+              $target
+                .off('click', startTest)
+                .on('touchstart mousedown', stopTest)
+                .removeClass('ready')
+                .addClass('running')
+                .find('span')
+                  .text('stop test');
+              startTime = +new Date();
+              $('<iframe></iframe>', {src: doc.url}).prependTo($area);
+            },
+            
+            /**
+             * handler for detecting the end of the test.
+             */
+            stopTest = function(){
+              stopTime = +new Date();
+              $target
+                .off('touchstart mousedown', stopTest)
+                .on('click', resetTest)
+                .removeClass('running')
+                .addClass('done')
+                .find('span')
+                  .text('done, reset?');
+              db.saveDoc({
+                test_id: doc._id,
+                startTime: startTime,
+                stopTime: stopTime,
+                delta: stopTime - startTime
+              })
+              console.log(stopTime - startTime);
+            },
+            
+            /**
+             * get set up to run the test again.
+             */
+            resetTest = function() {
+              $target
+                .off('click', resetTest)
+                .on('click', startTest)
+                .removeClass('done')
+                .addClass('ready')
+                .find('span')
+                  .text('start the test');
+              $area.find('iframe').remove();
+            };
+            
+          // register click handler for big target area
+          resetTest();
+        }
+      });
     }
     
   },
