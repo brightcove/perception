@@ -26,7 +26,7 @@
     <span>perception tests</span>
   </h2>
   <p>
-    <a href="#/add-test"><span>add another...</span></a>
+    <a href="#/edit-test"><span>add a new test...</span></a>
   </p>
   <table class="data-table" cellspacing="0">
     <tbody>
@@ -51,9 +51,9 @@
     </tbody>
   </table>
 </script>
-<script type="text/mustache" class="add-test">
+<script type="text/mustache" class="edit-test">
   <!--
-    Template for adding a new test.
+    Template for adding a new test or editing an existing test.
   -->
   <h2>
     <span>add a perception test</span>
@@ -61,18 +61,20 @@
   <p>
     <a href="#/"><span>back to list...</span></a>
   </p>
-  <form action="#/add-test" method="post">
+  <form action="#/save-test" method="post">
     <fieldset>
       <legend>test parameters</legend>
       <label class="url">
         <span>url</span>
-        <input type="text" name="url" =>
+        <input type="text" name="url" value="{{url}}"/>
       </label>
       <label class="description">
         <span>description</span>
-        <textarea name="description"></textarea>
+        <textarea name="description">{{description}}</textarea>
       </label>
     </fieldset>
+    {{#_id}}<input type="hidden" name="_id" value="{{_id}}" />{{/_id}}
+    {{#_rev}}<input type="hidden" name="_rev" value="{{_rev}}" />{{/_rev}}
     <input type="hidden" name="type" value="test" />
     <input type="submit" value="submit" />
   </form>

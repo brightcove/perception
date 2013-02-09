@@ -1,14 +1,23 @@
 /**
- * site
+ * site.js
+ * main application logic appears here
  */
 (function(window, document, $, Mustache){
 
 var
   
-  // database obj
+  /**
+   * database object, used to communicate with couchdb.
+   * principle methods include:
+   * - openDoc() to read an existing document
+   * - saveDoc() to save a new or existing document
+   * - view() to retrieve data from a map/reduce view
+   */
   db = window.db = $.couch.db(document.location.href.split('/')[3]),
   
-  // list of templates
+  /**
+   * jQuery result object containing a list of available templates.
+   */
   $templates = $('script[type="text/mustache"]'),
   
   /**
@@ -23,49 +32,61 @@ var
     return Mustache.to_html($elem.text(), data || {});
   },
   
-  // initialize the application
-  app = window.app = $.sammy('.main', function() {
-    
-    // user actions to implement:
-    // * list existing tests
-    // * add a test
-    // * edit an existing test
-    // * run a test
-    // * view summary statistics and graphs
+  /**
+   * application views (targets for Sammy routes)
+   */
+  views = {
     
     /**
-     * main route, show a list of tests
+     * list existing tests.
      */
-    this.get('#/', function(context) {
+    listTests: function(context) {
       db.view('perception/tests', {
         success: function(result){
-          context
-            .$element()
-              .html(render('.list-tests',result));
+          context.$element().html(render('.list-tests',result));
         }
       });
-    });
+    },
     
     /**
-     * add a new test
+     * add a new test or edit an existing test.
      */
-    this.get('#/add-test', function(context) {
-      context
-        .$element()
-          .html(render('.add-test'));
-    });
+    editTest: function(context) {
+      if (this.params._id) {
+        db.openDoc(this.params._id, {
+          success: function(doc){
+            context.$element().html(render('.edit-test', doc));
+          }
+        });
+      } else {
+        context.$element().html(render('.edit-test'));
+      }
+    },
     
     /**
-     * handle submission of new test
+     * save changes to a test.
      */
-    this.post('#/add-test', function(context) {
+    saveTest: function(context) {
       db.saveDoc(context.params,{
         success: function(){
           app.setLocation('#/');
         }
       });
-    });
+    }
     
+  },
+  
+  /**
+   * initialize the Sammy application, specifying routes.
+   */
+  app = window.app = $.sammy('.main', function() {
+    this.get('#/', views.listTests);
+    this.get('#/list-tests', views.listTests);
+    this.get('#/edit-test', views.editTest);
+    this.get('#/edit-test/:_id', views.editTest);
+    this.post('#/save-test', views.saveTest);
+    this.post('#/run-test', views.runTest);
+    this.post('#/analyze-test', views.analyzeTest);
   });
 
 // start the application
