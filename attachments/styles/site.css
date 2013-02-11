@@ -108,16 +108,15 @@ fieldset textarea:disabled {
   border: 1px solid #ccc;
   bottom: 10px;
   left: 10px;
+  overflow: hidden;
   position: absolute;
   right: 10px;
   top: 70px;
 }
 .run-area iframe {
-  bottom: 0;
   height: 100%;
   left: 0;
   position: absolute;
-  right: 0;
   top: 0;
   width: 100%;
 }
@@ -137,6 +136,14 @@ fieldset textarea:disabled {
 }
 .big-target.done {
   background: #fcc;
+}
+.big-target span {
+  display: none;
+}
+.big-target.ready span.ready,
+.big-target.running span.running,
+.big-target.done span.done {
+  display: inherit;
 }
 .big-button {
   font-size: 36px;
