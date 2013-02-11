@@ -155,9 +155,6 @@ fieldset textarea:disabled {
 /**
  * analysis and charts
  */
-svg {
-  position: static;
-}
 .bar rect {
   fill: steelblue;
   shape-rendering: crispEdges;
