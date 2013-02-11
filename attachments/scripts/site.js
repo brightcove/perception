@@ -138,7 +138,7 @@ var
             startTest = function(){
               $target
                 .off('click', startTest)
-                .on('touchstart mousedown', stopTest)
+                .on('click', stopTest)
                 .removeClass('ready')
                 .addClass('running')
                 .find('span')
@@ -153,7 +153,7 @@ var
             stopTest = function(){
               stopTime = +new Date();
               $target
-                .off('touchstart mousedown', stopTest)
+                .off('click', stopTest)
                 .on('click', resetTest)
                 .removeClass('running')
                 .addClass('done')
