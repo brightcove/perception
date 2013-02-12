@@ -48,6 +48,7 @@ code {
 .data-table {
   border: 1px solid #ccc;
   border-collapse: collapse;
+  width: 100%;
 }
 .data-table th {
   background: #f0f0f0;
