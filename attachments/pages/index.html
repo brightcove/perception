@@ -33,7 +33,7 @@
     <tbody>
       <tr>
         <th class="actions">actions</th>
-        <th class="url">url</th>
+        <th class="source">source</th>
         <th class="description">description</th>
       </tr>
       {{#rows}}
@@ -45,7 +45,7 @@
           <span class="edit"><a href="#/edit-test/{{_id}}">edit</a></span>
           <span class="delete"><a href="#/delete-test/{{_id}}">delete</a></span>
         </td>
-        <td class="url"><code>{{url}}</code></td>
+        <td class="source"><code>{{source}}</code></td>
         <td class="description"><p>{{description}}</p></td>
         {{/value}}
       </tr>
@@ -67,9 +67,9 @@
   <form action="#/save-{{action}}-test" method="post">
     <fieldset class="{{action}}-test">
       <legend>test parameters</legend>
-      <label class="url">
-        <span>url</span>
-        <input type="text" name="url" value="{{url}}" {{modifiable}}/>
+      <label class="source">
+        <span>source</span>
+        <input type="text" name="source" value="{{source}}" {{modifiable}}/>
       </label>
       <label class="description">
         <span>description</span>
@@ -117,7 +117,7 @@
       {{#stats}}
       <tr>
         <th>{{key}}</th>
-        <td>{{value}}</td>
+        <td><code>{{value}}</code></td>
       </tr>
       {{/stats}}
     </tbody>

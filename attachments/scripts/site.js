@@ -33,6 +33,16 @@ var
   },
   
   /**
+   * convenience method to attempt to correct legacy test documents.
+   */
+  purifyTest = function(doc) {
+    if (!('source' in doc)) {
+      doc.source = doc.url;
+    }
+    return doc;
+  },
+  
+  /**
    * application views (targets for Sammy routes)
    */
   views = {
@@ -43,6 +53,9 @@ var
     listTests: function(context) {
       db.view('perception/tests', {
         success: function(result){
+          $.each(result.rows, function(index, row){
+            purifyTest(row.value);
+          });
           context.$element().html(render('.list-tests',result));
         }
       });
@@ -64,10 +77,11 @@ var
     editTestForm: function(context) {
       db.openDoc(this.params._id, {
         success: function(doc){
-          context.$element().html(render('.manage-test', $.extend(doc,{
-            action: 'edit',
-            label: 'save'
-          })));
+          context.$element()
+            .html(render('.manage-test', $.extend(purifyTest(doc),{
+              action: 'edit',
+              label: 'save'
+            })));
         }
       });
     },
@@ -76,7 +90,7 @@ var
      * save a new or edited test.
      */
     saveTest: function(context) {
-      db.saveDoc(context.params,{
+      db.saveDoc(purifyTest(context.params), {
         success: function(){
           app.setLocation('#/');
         }
@@ -89,15 +103,15 @@ var
     deleteTestForm: function(context) {
       db.openDoc(this.params._id, {
         success: function(doc){
-          context.$element().html(render('.manage-test', $.extend(doc, {
-            action: 'delete',
-            label: 'delete',
-            modifiable: 'disabled'
-          })));
+          context.$element()
+            .html(render('.manage-test', $.extend(purifyTest(doc), {
+              action: 'delete',
+              label: 'delete',
+              modifiable: 'disabled'
+            })));
         }
       });
     },
-    
     
     /**
      * delete the specified test.
@@ -116,6 +130,9 @@ var
     runTest: function(context) {
       db.openDoc(this.params._id, {
         success: function(testDoc){
+          
+          purifyTest(testDoc);
+          
           var
             
             // set context element content to run-test template, then make
@@ -136,7 +153,14 @@ var
             if ($target.hasClass('ready')) {
               $target.removeClass('ready').addClass('running');
               runDoc.startTime = +new Date();
-              $('<iframe></iframe>', {src: testDoc.url}).prependTo($area);
+              var source = testDoc.source;
+              if (!(/^\w+:/).test(source)) {
+                if (source.indexOf('<body') === -1) {
+                  source = '<body>' + source + '</body>';
+                }
+                source = 'data:text/html;base64,' + btoa(source);
+              }
+              $('<iframe></iframe>', {src: source}).prependTo($area);
             } else if ($target.hasClass('running')) {
               $target.removeClass('running').addClass('done');
               runDoc.stopTime = +new Date();
@@ -161,6 +185,7 @@ var
     analyzeTest: function(context) {
       db.openDoc(this.params._id, {
         success: function(doc){
+          purifyTest(doc);
           db.view('perception/runs', {
             startkey: doc._id,
             endkey: doc._id,
@@ -181,7 +206,7 @@ var
                 .attr('class', 'main analyze-test')
                 .html(render('.analyze-test', {
                   stats: [
-                    { key: 'url', value: doc.url },
+                    { key: 'source', value: doc.source },
                     { key: 'description', value: doc.description },
                     { key: 'total runs', value: runs.total_rows },
                     { key: 'median load time', value: d3.round(d3.median(values)) + ' ms' },
