@@ -199,7 +199,7 @@ var
                 // extract the delta values
                 values = $.map(runs.rows, function(row){
                   return row.value.stopTime - row.value.startTime;
-                }),
+                }).sort(d3.ascending),
                 
                 // calculate high bound for x axis
                 ninetyfifth = d3.quantile(values, 0.95),
@@ -225,6 +225,11 @@ var
               $elem
                 .attr('class', 'main analyze-test')
                 .html(render('.analyze-test', { stats: stats }));
+              
+              // no need to render a chart if there's no data to render
+              if (!values.length) {
+                return;
+              }
               
               var
                 
