@@ -199,20 +199,32 @@ var
                 // extract the delta values
                 values = $.map(runs.rows, function(row){
                   return row.value.stopTime - row.value.startTime;
-                });
+                }),
+                
+                // calculate high bound for x axis
+                ninetyfifth = d3.quantile(values, 0.95),
+                maxX = ninetyfifth * 1.25,
+                
+                // statistics to display
+                stats = [
+                  { key: 'source', value: doc.source },
+                  { key: 'description', value: doc.description },
+                  { key: 'total runs', value: values.length }
+                ];
+              
+              if (values.length) {
+                stats = stats.concat([
+                  { key: 'median load time', value: d3.round(d3.median(values)) + ' ms' },
+                  { key: 'mean load time', value: d3.round(d3.mean(values)) + ' ms' },
+                  { key: '90th percentile', value: d3.round(d3.quantile(values, 0.9)) + ' ms' },
+                  { key: '95th percentile', value: d3.round(d3.quantile(values, 0.95)) + ' ms' }
+                ]);
+              }
                 
               // fill in main content, then generate histogram
               $elem
                 .attr('class', 'main analyze-test')
-                .html(render('.analyze-test', {
-                  stats: [
-                    { key: 'source', value: doc.source },
-                    { key: 'description', value: doc.description },
-                    { key: 'total runs', value: runs.total_rows },
-                    { key: 'median load time', value: d3.round(d3.median(values)) + ' ms' },
-                    { key: 'mean load time', value: d3.round(d3.mean(values)) + ' ms' }
-                  ]
-                }));
+                .html(render('.analyze-test', { stats: stats }));
               
               var
                 
@@ -226,7 +238,7 @@ var
                 
                 // x scale
                 x = d3.scale.linear()
-                  .domain([0, d3.max(values)])
+                  .domain([0, maxX])
                   .range([0, width]),
                 
                 // generate a histogram using twenty uniformly-spaced bins.
