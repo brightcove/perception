@@ -31,6 +31,84 @@ var
     }
     return Mustache.to_html($elem.text(), data || {});
   },
+
+  /**
+   * handler function for messages posted to the window
+   */
+  handleMessage = $.noop,
+
+  /**
+   * render a histogram for test results.
+   */
+  histogram = function(values, $elem) {
+    var
+    
+      // formatter for counts.
+      formatCount = d3.format(",.0f"),
+
+      // calculate high bound for x axis
+      ninetyfifth = d3.quantile(values, 0.95),
+      maxX = ninetyfifth * 1.25,
+      
+      // chart dimensions
+      margin = {top: 10, right: 30, bottom: 30, left: 30},
+      width = $elem.width() - margin.left - margin.right,
+      height = 200 - margin.top - margin.bottom,
+      
+      // x scale
+      x = d3.scale.linear()
+        .domain([0, maxX])
+        .range([0, width]),
+      
+      // generate a histogram using twenty uniformly-spaced bins.
+      data = d3.layout.histogram()
+        .bins(x.ticks(20))
+      (values),
+      
+      // y scale
+      y = d3.scale.linear()
+        .domain([0, d3.max(data, function(d) { return d.y; })])
+        .range([height, 0]);
+      
+      // x-axis
+      xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+      
+      // insert svg image for actual chart into context element
+      svg = d3.select($elem[0]).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
+      
+      // adjust chart bars
+      bar = svg.selectAll(".bar")
+        .data(data)
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+      
+      // append svg rect to each bar
+      bar.append("rect")
+        .attr("x", 1)
+        .attr("width", x(data[0].dx) - 1)
+        .attr("height", function(d) { return height - y(d.y); });
+      
+      // append formatted text label to each bar
+      bar.append("text")
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", x(data[0].dx) / 2)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return formatCount(d.y); });
+      
+      // append x-axis to the image
+      svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+  },
   
   /**
    * convenience method to attempt to correct legacy test documents.
@@ -146,7 +224,22 @@ var
             $target = $area.find('.big-target'),
             
             // document to save a run's data
-            runDoc;
+            runDoc,
+
+            // the iframe being tested
+            $iframe,
+          
+            // save updates to the document
+            updateDoc = function(callback) {
+              callback = callback || $.noop;
+              db.saveDoc(runDoc, {
+                success: function(response) {
+                  runDoc._id = response.id;
+                  runDoc._rev = response.rev;
+                  callback();
+                }
+              });
+            };
           
           // state machine for the ready/running/done states
           $target.click(function(){
@@ -160,14 +253,28 @@ var
                 }
                 source = 'data:text/html;base64,' + btoa(source);
               }
-              $('<iframe></iframe>', {src: source}).prependTo($area);
+              $iframe = $('<iframe></iframe>', {src: source}).prependTo($area);
+              handleMessage = function(data) {
+                runDoc.performance = JSON.parse(data);
+                updateDoc();
+              };
             } else if ($target.hasClass('running')) {
               $target.removeClass('running').addClass('done');
               runDoc.stopTime = +new Date();
-              db.saveDoc(runDoc);
-            } else {
+              updateDoc(function() {
+                $iframe[0].contentWindow.postMessage(0, '*');
+              });
+            } else if ($target.hasClass('done')) {
               $target.removeClass('done').addClass('ready');
-              $area.find('iframe').remove();
+              $iframe.remove();
+              $iframe = null;
+              handleMessage = $.noop;
+              runDoc = {
+                test_id: testDoc._id,
+                ua: window.navigator.userAgent
+              };
+            } else {
+              $target.addClass('ready');
               runDoc = {
                 test_id: testDoc._id,
                 ua: window.navigator.userAgent
@@ -178,7 +285,7 @@ var
         }
       });
     },
-    
+
     /**
      * analyze the runs for a given test.
      */
@@ -187,8 +294,8 @@ var
         success: function(doc){
           purifyTest(doc);
           db.view('perception/runs', {
-            startkey: doc._id,
-            endkey: doc._id,
+            startkey: [doc._id, ''],
+            endkey: [doc._id, '\u9999'],
             success: function(runs) {
               
               var
@@ -200,10 +307,6 @@ var
                 values = $.map(runs.rows, function(row){
                   return row.value.stopTime - row.value.startTime;
                 }).sort(d3.ascending),
-                
-                // calculate high bound for x axis
-                ninetyfifth = d3.quantile(values, 0.95),
-                maxX = ninetyfifth * 1.25,
                 
                 // statistics to display
                 stats = [
@@ -230,70 +333,22 @@ var
               if (!values.length) {
                 return;
               }
-              
-              var
-                
-                // formatter for counts.
-                formatCount = d3.format(",.0f"),
-                
-                // chart dimensions
-                margin = {top: 10, right: 30, bottom: 30, left: 30},
-                width = $elem.width() - margin.left - margin.right,
-                height = 200 - margin.top - margin.bottom,
-                
-                // x scale
-                x = d3.scale.linear()
-                  .domain([0, maxX])
-                  .range([0, width]),
-                
-                // generate a histogram using twenty uniformly-spaced bins.
-                data = d3.layout.histogram()
-                  .bins(x.ticks(20))
-                  (values),
-                
-                // y scale
-                y = d3.scale.linear()
-                  .domain([0, d3.max(data, function(d) { return d.y; })])
-                  .range([height, 0]);
-                
-                // x-axis
-                xAxis = d3.svg.axis()
-                  .scale(x)
-                  .orient("bottom");
-                
-                // insert svg image for actual chart into context element
-                svg = d3.select($elem[0]).append("svg")
-                  .attr("width", width + margin.left + margin.right)
-                  .attr("height", height + margin.top + margin.bottom)
-                  .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
-                
-                // adjust chart bars
-                bar = svg.selectAll(".bar")
-                  .data(data)
-                  .enter().append("g")
-                    .attr("class", "bar")
-                    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-              
-              // append svg rect to each bar
-              bar.append("rect")
-                  .attr("x", 1)
-                  .attr("width", x(data[0].dx) - 1)
-                  .attr("height", function(d) { return height - y(d.y); });
-              
-              // append formatted text label to each bar
-              bar.append("text")
-                  .attr("dy", ".75em")
-                  .attr("y", 6)
-                  .attr("x", x(data[0].dx) / 2)
-                  .attr("text-anchor", "middle")
-                  .text(function(d) { return formatCount(d.y); });
-              
-              // append x-axis to the image
-              svg.append("g")
-                  .attr("class", "x axis")
-                  .attr("transform", "translate(0," + height + ")")
-                  .call(xAxis);
+
+              $elem.append('<h3>All</h3>');
+              histogram(values, $elem);
+
+              db.view('perception/runs', {
+                startkey: [doc._id, 'ios'],
+                endkey: [doc._id, 'ios\u9999'],
+                success: function(runs) {
+                  // extract the delta values
+                  var values = $.map(runs.rows, function(row){
+                    return row.value.stopTime - row.value.startTime;
+                  }).sort(d3.ascending);
+                  $elem.append('<h3>iOS</h3>');
+                  histogram(values, $elem);
+                }
+              });
             }
           });
         }
@@ -331,5 +386,10 @@ var
 
 // start the application
 app.run('#/');
+
+// messages posted from the iframe
+window.addEventListener('message', function(e) {
+  handleMessage(e.data);
+}, false);
 
 })(window, document, jQuery, Mustache);
