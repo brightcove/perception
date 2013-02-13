@@ -10,7 +10,7 @@ html, body {
   background: #a0a0a0;
   color: #333;
   font-family: Helvetica, Arial;
-  font-size: 12px;
+  font-size: 100%;
   height: 100%;
   width: 100%;
 }
@@ -32,7 +32,7 @@ html, body {
  * presentation elements
  */
 h2 {
-  font-size: 18px;
+  font-size: 150%;
   font-weight: bold;
 }
 p {
@@ -73,7 +73,7 @@ code {
  * list tests view
  */
 .data-table .actions {
-  width: 15%;
+  width: 4.5em;
 }
 .data-table .description {
   width: 40%;
@@ -158,7 +158,7 @@ fieldset textarea:disabled {
   display: inline;
 }
 .big-button {
-  font-size: 36px;
+  font-size: 300%;
   margin: 20px;
   text-align: center;
 }
