@@ -78,10 +78,49 @@ code {
  * list tests view
  */
 .data-table .actions {
-  width: 4.5em;
+  width: 42px;
 }
 .data-table .description {
   width: 40%;
+}
+.data-table th.actions {
+  background: transparent;
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+.data-table th.actions span {
+  display: none;
+}
+.data-table .actions {
+  padding: 0;
+}
+
+/**
+ * action buttons
+ */
+.actions a {
+  background: url("../images/sprite.png");
+  background-color: #ccc;
+  border: 1px outset #f0f0f0;
+  display: block;
+  height: 40px;
+  margin: 0;
+  width: 40px;
+}
+.actions span {
+  display: none;
+}
+.actions .run {
+  background-position: 0px 0px;
+}
+.actions .analyze {
+  background-position: -40px 0px;
+}
+.actions .edit {
+  background-position: 0px -40px;
+}
+.actions .delete {
+  background-position: -40px -40px;
 }
 
 /**
