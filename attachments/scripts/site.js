@@ -341,12 +341,13 @@ var
                 startkey: [doc._id, 'ios'],
                 endkey: [doc._id, 'ios\u9999'],
                 success: function(runs) {
-                  // extract the delta values
-                  var values = $.map(runs.rows, function(row){
-                    return row.value.stopTime - row.value.startTime;
-                  }).sort(d3.ascending);
-                  $elem.append('<h3>iOS</h3>');
-                  histogram(values, $elem);
+                  if (runs.rows.length) {
+                    var values = $.map(runs.rows, function(row){
+                      return row.value.stopTime - row.value.startTime;
+                    }).sort(d3.ascending);
+                    $elem.append('<h3>iOS</h3>');
+                    histogram(values, $elem);
+                  }
                 }
               });
             }
