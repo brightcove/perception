@@ -89,18 +89,18 @@ code {
  * list tests view
  */
 .list-tests .actions {
-  width: 85px;
+  width: 90px;
 }
 @media (max-width: 600px) {
   .list-tests .actions {
-    width: 43px;
+    width: 48px;
   }
 }
 .list-tests .content {
   width: 100%;
 }
 .list-tests .actions {
-  padding: 10px 0;
+  padding: 10px 5px 10px 0;
 }
 .list-tests td {
   border: none;
