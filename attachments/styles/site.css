@@ -78,7 +78,7 @@ code {
  * list tests view
  */
 .data-table .actions {
-  width: 42px;
+  width: 43px;
 }
 .data-table .description {
   width: 40%;
@@ -202,7 +202,7 @@ fieldset textarea:disabled {
   display: inline;
 }
 .big-button {
-  font-size: 300%;
+  font-size: 200%;
   margin: 20px;
   text-align: center;
 }
