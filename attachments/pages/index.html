@@ -31,18 +31,18 @@
   <table class="data-table" cellspacing="0">
     <tbody>
       <tr>
-        <th class="actions">actions</th>
-        <th class="source">source</th>
-        <th class="description">description</th>
+        <th class="actions"><span>actions</span></th>
+        <th class="source"><span>source</span></th>
+        <th class="description"><span>description</span></th>
       </tr>
       {{#rows}}
       <tr>
         {{#value}}
         <td class="actions">
-          <span class="run"><a href="#/run-test/{{_id}}">run</a></span>
-          <span class="analyze"><a href="#/analyze-test/{{_id}}">analyze</a></span>
-          <span class="edit"><a href="#/edit-test/{{_id}}">edit</a></span>
-          <span class="delete"><a href="#/delete-test/{{_id}}">delete</a></span>
+          <a class="run" title="run" href="#/run-test/{{_id}}"><span>run</span></a>
+          <a class="analyze" title="analyze" href="#/analyze-test/{{_id}}"><span>analyze</span></a>
+          <a class="edit" title="edit" href="#/edit-test/{{_id}}"><span>edit</span></a>
+          <a class="delete" title="delete" href="#/delete-test/{{_id}}"><span>delete</span></a>
         </td>
         <td class="source"><code>{{source}}</code></td>
         <td class="description"><p>{{description}}</p></td>
