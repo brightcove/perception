@@ -1,2 +1,2 @@
 #!/bin/bash
-couchapp push app.js http://${1:localhost:5984}/perception
+couchapp push app.js http://${1:-'localhost:5984'}/perception
