@@ -33,12 +33,6 @@
       {{#rows}}
       <tr>
         {{#value}}
-        <td class="actions">
-          <a class="run" title="run" href="#/run-test/{{_id}}"><span>run</span></a>
-          <a class="analyze" title="analyze" href="#/analyze-test/{{_id}}"><span>analyze</span></a>
-          <a class="edit" title="edit" href="#/edit-test/{{_id}}"><span>edit</span></a>
-          <a class="delete" title="delete" href="#/delete-test/{{_id}}"><span>delete</span></a>
-        </td>
         <td class="content">
           <dl>
             <dt class="source"><span>source</span></dt>
@@ -46,6 +40,12 @@
             <dt class="description"><span>description</span></dt>
             <dd class="description"><p>{{description}}</p></dd>
           </dl>
+        </td>
+        <td class="actions">
+          <a class="run" title="run" href="#/run-test/{{_id}}"><span>run</span></a>
+          <a class="analyze" title="analyze" href="#/analyze-test/{{_id}}"><span>analyze</span></a>
+          <a class="edit" title="edit" href="#/edit-test/{{_id}}"><span>edit</span></a>
+          <a class="delete" title="delete" href="#/delete-test/{{_id}}"><span>delete</span></a>
         </td>
         {{/value}}
       </tr>
