@@ -187,8 +187,8 @@ var
         success: function(doc){
           purifyTest(doc);
           db.view('perception/runs', {
-            startkey: doc._id,
-            endkey: doc._id,
+            startkey: [doc._id, ''],
+            endkey: [doc._id, '\u9999'],
             success: function(runs) {
               
               var

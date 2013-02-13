@@ -35,7 +35,12 @@ module.exports = {
     runs: {
       map: function(doc) {
         if ('test_id' in doc) {
-          emit(doc.test_id, doc);
+          if ('ua' in doc) {
+            var platform = ~doc.ua.indexOf('(iP') ? 'ios' : ~doc.ua.indexOf('Android') ? 'android' : 'etc';
+            emit([doc.test_id, platform], doc);
+          } else {
+            emit([doc.test_id, 'unknown'], doc);
+          }
         }
       }
     }
