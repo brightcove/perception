@@ -28,13 +28,8 @@
   <p>
     <a href="#/add-test"><span>add a new test...</span></a>
   </p>
-  <table class="data-table" cellspacing="0">
+  <table class="data-table list-tests" cellspacing="0">
     <tbody>
-      <tr>
-        <th class="actions"><span>actions</span></th>
-        <th class="source"><span>source</span></th>
-        <th class="description"><span>description</span></th>
-      </tr>
       {{#rows}}
       <tr>
         {{#value}}
@@ -44,8 +39,14 @@
           <a class="edit" title="edit" href="#/edit-test/{{_id}}"><span>edit</span></a>
           <a class="delete" title="delete" href="#/delete-test/{{_id}}"><span>delete</span></a>
         </td>
-        <td class="source"><code>{{source}}</code></td>
-        <td class="description"><p>{{description}}</p></td>
+        <td class="content">
+          <dl>
+            <dt class="source"><span>source</span></dt>
+            <dd class="source"><code>{{source}}</code></dd>
+            <dt class="description"><span>description</span></dt>
+            <dd class="description"><p>{{description}}</p></dd>
+          </dl>
+        </td>
         {{/value}}
       </tr>
       {{/rows}}

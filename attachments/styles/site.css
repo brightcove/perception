@@ -73,26 +73,43 @@ code {
 .data-table code {
   word-break: break-all;
 }
+.data-table dl,
+.data-table dt,
+.data-table dd {
+  display: block;
+}
+.data-table dt {
+  font-style: italic;
+}
+.data-table dd {
+  margin-left: 10px;
+}
 
 /**
  * list tests view
  */
-.data-table .actions {
-  width: 43px;
+.list-tests .actions {
+  width: 85px;
 }
-.data-table .description {
-  width: 40%;
+@media (max-width: 600px) {
+  .list-tests .actions {
+    width: 43px;
+  }
 }
-.data-table th.actions {
-  background: transparent;
-  border-top-color: transparent;
-  border-left-color: transparent;
+.list-tests .content {
+  width: 100%;
 }
-.data-table th.actions span {
-  display: none;
+.list-tests .actions {
+  padding: 10px 0;
 }
-.data-table .actions {
-  padding: 0;
+.list-tests td {
+  border: none;
+}
+.list-tests tr {
+  border: 1px solid #ccc;
+}
+.list-tests tr:nth-child(even) td {
+  background: #f0f0f0;
 }
 
 /**
@@ -103,6 +120,7 @@ code {
   background-color: #ccc;
   border: 1px outset #f0f0f0;
   display: block;
+  float: left;
   height: 40px;
   margin: 0;
   width: 40px;
