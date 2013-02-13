@@ -33,6 +33,11 @@ var
   },
 
   /**
+   * handler function for messages posted to the window
+   */
+  handleMessage = $.noop,
+
+  /**
    * render a histogram for test results.
    */
   histogram = function(values, $elem) {
@@ -219,7 +224,22 @@ var
             $target = $area.find('.big-target'),
             
             // document to save a run's data
-            runDoc;
+            runDoc,
+
+            // the iframe being tested
+            $iframe,
+          
+            // save updates to the document
+            updateDoc = function(callback) {
+              callback = callback || $.noop;
+              db.saveDoc(runDoc, {
+                success: function(response) {
+                  runDoc._id = response.id;
+                  runDoc._rev = response.rev;
+                  callback();
+                }
+              });
+            };
           
           // state machine for the ready/running/done states
           $target.click(function(){
@@ -233,18 +253,31 @@ var
                 }
                 source = 'data:text/html;base64,' + btoa(source);
               }
-              $('<iframe></iframe>', {src: source}).prependTo($area);
+              $iframe = $('<iframe></iframe>', {src: source}).prependTo($area);
+              handleMessage = function(data) {
+                runDoc.performance = JSON.parse(data);
+                updateDoc();
+              };
             } else if ($target.hasClass('running')) {
               $target.removeClass('running').addClass('done');
               runDoc.stopTime = +new Date();
-              db.saveDoc(runDoc);
-            } else {
+              updateDoc(function() {
+                $iframe[0].contentWindow.postMessage(0, '*');
+              });
+            } else if ($target.hasClass('done')) {
               $target.removeClass('done').addClass('ready');
-              $area.find('iframe').remove();
+              $iframe.remove();
+              $iframe = null;
+              handleMessage = $.noop;
               runDoc = {
                 test_id: testDoc._id,
-                ua: window.navigator.userAgent,
-                performance: window.performance
+                ua: window.navigator.userAgent
+              };
+            } else {
+              $target.addClass('ready');
+              runDoc = {
+                test_id: testDoc._id,
+                ua: window.navigator.userAgent
               };
             }
           }).click();
@@ -353,5 +386,10 @@ var
 
 // start the application
 app.run('#/');
+
+// messages posted from the iframe
+window.addEventListener('message', function(e) {
+  handleMessage(e.data);
+}, false);
 
 })(window, document, jQuery, Mustache);
