@@ -243,7 +243,8 @@ var
               $area.find('iframe').remove();
               runDoc = {
                 test_id: testDoc._id,
-                ua: window.navigator.userAgent
+                ua: window.navigator.userAgent,
+                performance: window.performance
               };
             }
           }).click();
