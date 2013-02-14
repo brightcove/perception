@@ -25,14 +25,18 @@
   <h2>
     <span>perception tests</span>
   </h2>
-  <p>
-    <a href="#/add-test"><span>add a new test...</span></a>
-  </p>
+  <nav>
+    <ul>
+      <li><a href="#/add-test"><span>add a new test...</span></a></li>
+      <li><a href="#/compare-tests"><span>compare selected tests...</span></a></li>
+    </ul>
+  </nav>
   <table class="data-table list-tests" cellspacing="0">
     <tbody>
       {{#rows}}
       <tr>
         {{#value}}
+        <td class="selection"><input type="checkbox" name="{{_id}}"></td>
         <td class="content">
           <dl>
             <dt class="source"><span>source</span></dt>
@@ -112,6 +116,22 @@
   <p>
     <a href="#/"><span>back to list...</span></a>
   </p>
+</script>
+<script type="text/mustache" class="compare-tests">
+<!--
+  Template for comparing analyses of the runs of tests.
+-->
+<h2>
+  <span>compare perception tests</span>
+</h2>
+<p>
+  <a href="#/"><span>back to list...</span></a>
+</p>
+</script>
+<script type="text/mustache" class="test-stats">
+  <!--
+    Template for displaying the statistics for runs of a test.
+  --!>
   <table class="data-table">
     <tbody>
       {{#stats}}

@@ -36,9 +36,34 @@ var
    * handler function for messages posted to the window
    */
   handleMessage = $.noop,
+  
+  /**
+   * render a table of statistics for test results
+   */
+  stats = function(doc, values, $elem) {
+    // statistics to display
+    var stats = [
+        { key: 'source', value: doc.source },
+        { key: 'description', value: doc.description },
+        { key: 'total runs', value: values.length }
+      ];
+    
+    if (values.length) {
+      stats = stats.concat([
+        { key: 'median load time', value: d3.round(d3.median(values)) + ' ms' },
+        { key: 'mean load time', value: d3.round(d3.mean(values)) + ' ms' },
+        { key: '90th percentile', value: d3.round(d3.quantile(values, 0.9)) + ' ms' },
+        { key: '95th percentile', value: d3.round(d3.quantile(values, 0.95)) + ' ms' }
+      ]);
+    }
+    
+    // fill in stats table
+    $elem
+      .append(render('.test-stats', { stats: stats }));
+  },
 
   /**
-   * render a histogram for test results.
+   * render a histogram for test results
    */
   histogram = function(values, $elem) {
     var
@@ -129,12 +154,20 @@ var
      * list existing tests.
      */
     listTests: function(context) {
+      var $elem = context.$element();
       db.view('perception/tests', {
         success: function(result){
           $.each(result.rows, function(index, row){
             purifyTest(row.value);
           });
-          context.$element().html(render('.list-tests',result));
+          $elem.html(render('.list-tests', result));
+          $elem.find('a[href="#/compare-tests"]').on('click', function(event) {
+            var ids = $elem.find(':checked').map(function() {
+              return $(this).attr('name');
+            }).toArray().join(',');
+            event.preventDefault();
+            window.location.hash = '#/compare-tests/' + ids;
+          });
         }
       });
     },
@@ -200,6 +233,71 @@ var
           app.setLocation('#/');
         }
       });
+    },
+
+    /**
+     * compare different test runs
+     */
+    compareTests: function(context) {
+      var
+        ids = context.params._ids.split(','),
+        results = [],
+        $elem = context.$element();
+
+      // display the top-matter
+      $elem
+        .attr('class', 'main compare-tests')
+        .html(render('.compare-tests'));
+
+      // short-circuit things if we don't have at least two tests
+      if (!ids || ids.length < 2) {
+        $elem.append('<p>not enough tests to compare');
+        return;
+      }
+
+      // string together callbacks for all the db requests
+      ids.reduce(function(next, id) {
+        return function() {
+          db.openDoc(id, {
+            success: function(doc){
+              purifyTest(doc);
+              db.view('perception/runs', {
+                startkey: [doc._id, ''],
+                endkey: [doc._id, '\u9999'],
+                success: function(runs) {
+                  results.push({
+                    id: id,
+                    doc: doc,
+                    runs:runs
+                  });
+                  next();
+                }
+              });
+            }
+          });
+        };
+      }, function() {
+        var result;
+        
+        // render the stats
+        results.forEach(function(result) {
+
+          // extract the delta values and store them for later
+          result.values = $.map(result.runs.rows, function(row){
+            return row.value.stopTime - row.value.startTime;
+          }).sort(d3.ascending);
+          
+          // append the stats
+          stats(result.doc, result.values, $elem);
+        });
+
+        // render the histograms
+        results.forEach(function(result) {
+          $elem.append('<h3>' + result.doc.description + '</h3>');
+          histogram(result.values, $elem);
+        });
+        
+      })();
     },
     
     /**
@@ -306,28 +404,13 @@ var
                 // extract the delta values
                 values = $.map(runs.rows, function(row){
                   return row.value.stopTime - row.value.startTime;
-                }).sort(d3.ascending),
-                
-                // statistics to display
-                stats = [
-                  { key: 'source', value: doc.source },
-                  { key: 'description', value: doc.description },
-                  { key: 'total runs', value: values.length }
-                ];
+                }).sort(d3.ascending);
               
-              if (values.length) {
-                stats = stats.concat([
-                  { key: 'median load time', value: d3.round(d3.median(values)) + ' ms' },
-                  { key: 'mean load time', value: d3.round(d3.mean(values)) + ' ms' },
-                  { key: '90th percentile', value: d3.round(d3.quantile(values, 0.9)) + ' ms' },
-                  { key: '95th percentile', value: d3.round(d3.quantile(values, 0.95)) + ' ms' }
-                ]);
-              }
-                
-              // fill in main content, then generate histogram
+              // generate the stats
               $elem
                 .attr('class', 'main analyze-test')
-                .html(render('.analyze-test', { stats: stats }));
+                .html(render('.analyze-test'));
+              stats(doc, values, $elem);
               
               // no need to render a chart if there's no data to render
               if (!values.length) {
@@ -376,6 +459,9 @@ var
     // adding/edit or delete a test and save the results
     this.get('#/delete-test/:_id', views.deleteTestForm);
     this.post('#/save-delete-test', views.deleteTest);
+
+    // compare selected tests
+    this.get('#/compare-tests/:_ids', views.compareTests);
     
     // run a test
     this.get('#/run-test/:_id', views.runTest);
