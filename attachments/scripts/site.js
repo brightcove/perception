@@ -2,7 +2,7 @@
  * site.js
  * main application logic appears here
  */
-(function(window, document, $, Mustache){
+(function(window, document, $, Handlebars){
 
 var
   
@@ -16,20 +16,27 @@ var
   db = window.db = $.couch.db(document.location.href.split('/')[3]),
   
   /**
-   * jQuery result object containing a list of available templates.
+   * handlebar template.
    */
-  $templates = $('script[type="text/mustache"]'),
+  templates = (function(){
+    var templates = {};
+    $('script[type="text/x-handlebars-template"]')
+      .each(function(){
+        templates[this.className] = Handlebars.compile($(this).text());
+      });
+    return templates;
+  })(),
   
   /**
-   * convenience method for looking up a template and performing a mustache
+   * convenience method for looking up a template and performing a handlebars
    * transformation on it to return HTML.
    */
-  render = function(selector, data) {
-    var $elem = $templates.filter(selector);
-    if (!$elem.length) {
+  render = function(name, data) {
+    var template = templates[name];
+    if (!template) {
       throw "no templates match the selector: " + selector;
     }
-    return Mustache.to_html($elem.text(), data || {});
+    return template(data || {});
   },
 
   /**
@@ -59,7 +66,7 @@ var
     
     // fill in stats table
     $elem
-      .append(render('.test-stats', { stats: stats }));
+      .append(render('test-stats', { stats: stats }));
   },
 
   /**
@@ -160,7 +167,7 @@ var
           $.each(result.rows, function(index, row){
             purifyTest(row.value);
           });
-          $elem.html(render('.list-tests', result));
+          $elem.html(render('list-tests', result));
           $elem.find('a[href="#/compare-tests"]').on('click', function(event) {
             var ids = $elem.find(':checked').map(function() {
               return $(this).attr('name');
@@ -176,7 +183,7 @@ var
      * form for adding a new test.
      */
     addTestForm: function(context) {
-      context.$element().html(render('.manage-test', {
+      context.$element().html(render('manage-test', {
         action: 'add',
         label: 'add'
       }));
@@ -189,7 +196,7 @@ var
       db.openDoc(this.params._id, {
         success: function(doc){
           context.$element()
-            .html(render('.manage-test', $.extend(purifyTest(doc),{
+            .html(render('manage-test', $.extend(purifyTest(doc),{
               action: 'edit',
               label: 'save'
             })));
@@ -215,7 +222,7 @@ var
       db.openDoc(this.params._id, {
         success: function(doc){
           context.$element()
-            .html(render('.manage-test', $.extend(purifyTest(doc), {
+            .html(render('manage-test', $.extend(purifyTest(doc), {
               action: 'delete',
               label: 'delete',
               modifiable: 'disabled'
@@ -247,7 +254,7 @@ var
       // display the top-matter
       $elem
         .attr('class', 'main compare-tests')
-        .html(render('.compare-tests'));
+        .html(render('compare-tests'));
 
       // short-circuit things if we don't have at least two tests
       if (!ids || ids.length < 2) {
@@ -314,7 +321,7 @@ var
             // set context element content to run-test template, then make
             // note of the .run-area element
             $area = context.$element()
-              .html(render('.run-test', testDoc))
+              .html(render('run-test', testDoc))
               .find('.run-area'),
             
             // get a handle on the big target which will be used to both
@@ -409,7 +416,7 @@ var
               // generate the stats
               $elem
                 .attr('class', 'main analyze-test')
-                .html(render('.analyze-test'));
+                .html(render('analyze-test'));
               stats(doc, values, $elem);
               
               // no need to render a chart if there's no data to render
@@ -479,4 +486,4 @@ window.addEventListener('message', function(e) {
   handleMessage(e.data);
 }, false);
 
-})(window, document, jQuery, Mustache);
+})(window, document, jQuery, Handlebars);

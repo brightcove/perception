@@ -18,7 +18,7 @@
 -->
 </div>
 </div>
-<script type="text/mustache" class="list-tests">
+<script type="text/x-handlebars-template" class="list-tests">
   <!--
     Template for displaying the list of available tests.
   -->
@@ -57,7 +57,7 @@
     </tbody>
   </table>
 </script>
-<script type="text/mustache" class="manage-test">
+<script type="text/x-handlebars-template" class="manage-test">
   <!--
     Template for producing a form that manages adding a new test, editing an 
     existing test or deleting a specified test.
@@ -86,7 +86,7 @@
     <input type="submit" value="{{label}}" />
   </form>
 </script>
-<script type="text/mustache" class="run-test">
+<script type="text/x-handlebars-template" class="run-test">
   <!--
     Template for running a specified test.
   -->
@@ -106,7 +106,7 @@
     </div>
   </div>
 </script>
-<script type="text/mustache" class="analyze-test">
+<script type="text/x-handlebars-template" class="analyze-test">
   <!--
     Template for displaying an analysis of the runs of a test.
   -->
@@ -117,7 +117,7 @@
     <a href="#/"><span>back to list...</span></a>
   </p>
 </script>
-<script type="text/mustache" class="compare-tests">
+<script type="text/x-handlebars-template" class="compare-tests">
 <!--
   Template for comparing analyses of the runs of tests.
 -->
@@ -128,7 +128,7 @@
   <a href="#/"><span>back to list...</span></a>
 </p>
 </script>
-<script type="text/mustache" class="test-stats">
+<script type="text/x-handlebars-template" class="test-stats">
   <!--
     Template for displaying the statistics for runs of a test.
   --!>
@@ -147,7 +147,7 @@
 <script src="scripts/jquery.couch.js"></script>
 <script src="scripts/jquery.request.js"></script>
 <script src="scripts/sammy/sammy.js"></script>
-<script src="scripts/mustache.js"></script>
+<script src="scripts/handlebars.js"></script>
 <script src="scripts/d3.v3.min.js"></script>
 <script src="scripts/site.js"></script>
 </body>
