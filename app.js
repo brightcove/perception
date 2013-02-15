@@ -55,6 +55,27 @@ module.exports = {
   },
   
   /**
+   * filters create separate channels for listening for change notifications.
+   */
+  filters: {
+    
+    /**
+     * filter test runs by their test_id, the _id of the test document.
+     */
+    runs: function(doc, req){
+      if ('test_id' in doc) {
+        if (req.query.test_id) {
+          return doc.test_id === req.query.test_id;
+        } else {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+  },
+  
+  /**
    * validation function for document updates
    */
   validate_doc_update: function (newDoc, oldDoc, userCtx) {   

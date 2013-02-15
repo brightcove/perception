@@ -481,6 +481,11 @@ var
 // start the application
 app.run('#/');
 
+// reload the current view whenever something changes in couchdb
+db.changes().onChange(function(){
+  app.refresh();
+});
+
 // messages posted from the iframe
 window.addEventListener('message', function(e) {
   handleMessage(e.data);
