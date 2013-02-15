@@ -14,6 +14,13 @@ html, body {
   height: 100%;
   width: 100%;
 }
+.bg {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  top: auto;
+  left: auto;
+}
 .frame {
   background: white;
   height: 100%;
