@@ -34,7 +34,7 @@ var
   render = function(name, data) {
     var template = templates[name];
     if (!template) {
-      throw "no templates match the selector: " + selector;
+      throw "no templates have the name: " + name;
     }
     return template(data || {});
   },

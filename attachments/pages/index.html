@@ -80,8 +80,8 @@
         <textarea name="description" {{modifiable}}>{{description}}</textarea>
       </label>
     </fieldset>
-    {{#_id}}<input type="hidden" name="_id" value="{{_id}}" />{{/_id}}
-    {{#_rev}}<input type="hidden" name="_rev" value="{{_rev}}" />{{/_rev}}
+    {{#if _id}}<input type="hidden" name="_id" value="{{_id}}" />{{/if}}
+    {{#if _rev}}<input type="hidden" name="_rev" value="{{_rev}}" />{{/if}}
     <input type="hidden" name="type" value="test" />
     <input type="submit" value="{{label}}" />
   </form>
