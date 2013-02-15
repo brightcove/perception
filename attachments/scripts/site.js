@@ -16,6 +16,11 @@ var
   db = window.db = $.couch.db(document.location.href.split('/')[3]),
   
   /**
+   * callback for any time the database changes.
+   */
+  changeHandler = $.noop,
+  
+  /**
    * handlebar template.
    */
   templates = (function(){
@@ -246,6 +251,11 @@ var
      * compare different test runs
      */
     compareTests: function(context) {
+      
+      changeHandler = function(){
+        app.refresh();
+      };
+      
       var
         ids = context.params._ids.split(','),
         results = [],
@@ -395,6 +405,11 @@ var
      * analyze the runs for a given test.
      */
     analyzeTest: function(context) {
+      
+      changeHandler = function(){
+        app.refresh();
+      };
+      
       db.openDoc(this.params._id, {
         success: function(doc){
           purifyTest(doc);
@@ -478,12 +493,16 @@ var
     
   });
 
+app.bind('run-route', function(){
+  changeHandler = $.noop;
+});
+
 // start the application
 app.run('#/');
 
 // reload the current view whenever something changes in couchdb
 db.changes().onChange(function(){
-  app.refresh();
+  changeHandler.apply(null, arguments);
 });
 
 // messages posted from the iframe
