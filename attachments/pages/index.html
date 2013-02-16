@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>perception</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="stylesheet" type="text/css" href="styles/reset.css" />
+<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="styles/fontawesome.css" />
 <link rel="stylesheet" type="text/css" href="styles/site.css" />
 <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
 <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
@@ -47,10 +48,10 @@
           </dl>
         </td>
         <td class="actions">
-          <a class="run" title="run" href="#/run-test/{{_id}}"><span>run</span></a>
-          <a class="analyze" title="analyze" href="#/analyze-test/{{_id}}"><span>analyze</span></a>
-          <a class="edit" title="edit" href="#/edit-test/{{_id}}"><span>edit</span></a>
-          <a class="delete" title="delete" href="#/delete-test/{{_id}}"><span>delete</span></a>
+          <a class="btn btn-large" title="run" href="#/run-test/{{_id}}"><i class='icon-play'></i><span>run</span></a>
+          <a class="btn btn-large" title="analyze" href="#/analyze-test/{{_id}}"><i class='icon-bar-chart'></i><span>analyze</span></a>
+          <a class="btn btn-large" title="edit" href="#/edit-test/{{_id}}"><i class='icon-edit'></i><span>edit</span></a>
+          <a class="btn btn-large btn-danger" title="delete" href="#/delete-test/{{_id}}"><i class='icon-trash'></i><span>delete</span></a>
         </td>
         {{/value}}
       </tr>
@@ -133,7 +134,7 @@
   <!--
     Template for displaying the statistics for runs of a test.
   --!>
-  <table class="data-table">
+  <table class="data-table test-stats">
     <tbody>
       {{#stats}}
       <tr>

@@ -7,18 +7,13 @@
  * scaffolding
  */
 html, body {
-  background: #a0a0a0;
-  color: #333;
-  font-family: Helvetica, Arial;
-  font-size: 100%;
   height: 100%;
-  width: 100%;
 }
 .bg {
   position: fixed;
   min-width: 100%;
   min-height: 100%;
-  top: auto;
+  top: 0;
   left: auto;
 }
 .frame {
@@ -29,29 +24,11 @@ html, body {
   min-height: 100%;
 }
 .main {
-  background: white;
+  background-color: white;
+  border-radius: 10px;
   min-height: 100%;
   padding: 0 10px;
   position: relative;
-}
-
-/**
- * presentation elements
- */
-h2 {
-  font-size: 150%;
-  font-weight: bold;
-}
-h3 {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-p {
-  margin: 10px 0;
-}
-code {
-  font-family: monospace;
 }
 
 /**
@@ -103,7 +80,7 @@ nav li {
   width: 23px;
 }
 .list-tests .actions {
-  width: 90px;
+  width: 125px;
 }
 @media (max-width: 600px) {
   .list-tests .actions {
@@ -134,20 +111,12 @@ nav li {
  * action buttons
  */
 .actions a {
-  background: url("../images/sprite.png");
-  background-color: #ccc;
-  border: 1px outset #f0f0f0;
-  display: block;
+  width: 20px;
   float: left;
-  height: 40px;
-  margin: 0;
-  width: 40px;
+  margin: 1px;
 }
 .actions span {
   display: none;
-}
-.actions .run {
-  background-position: 0px 0px;
 }
 .actions .analyze {
   background-position: -40px 0px;
@@ -157,39 +126,6 @@ nav li {
 }
 .actions .delete {
   background-position: -40px -40px;
-}
-
-/**
- * forms and fields
- */
-fieldset {
-  border: 1px solid #ccc;
-  margin: 15px 0 10px;
-  max-width: 300px;
-  padding: 10px 15px 10px 10px;
-  position: relative;
-}
-fieldset legend {
-  background: white;
-  padding: 0 5px;
-  position: absolute;
-  top: -10px;
-  left: 10px;
-}
-fieldset label,
-fieldset label span,
-fieldset label input,
-fieldset label textarea {
-  display: block;
-  width: 100%;
-}
-fieldset label input,
-fieldset label textarea {
-  border: 1px solid #ccc;
-}
-fieldset input:disabled,
-fieldset textarea:disabled {
-  background: #f0f0f0;
 }
 
 /**
@@ -251,6 +187,11 @@ fieldset textarea:disabled {
 /**
  * analysis and charts
  */
+.data-table.test-stats code {
+  background: none;
+  border: none;
+  color: #333;
+}
 .bar rect {
   fill: steelblue;
   shape-rendering: crispEdges;
