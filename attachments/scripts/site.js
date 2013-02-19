@@ -240,7 +240,9 @@ var
      * delete the specified test.
      */
     deleteTest: function(context) {
-      db.removeDoc(context.params,{
+      var doc = purifyTest(context.params);
+      doc.deleted = true;
+      db.saveDoc(doc, {
         success: function(){
           app.setLocation('#/');
         }

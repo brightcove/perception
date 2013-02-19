@@ -23,7 +23,7 @@ module.exports = {
      */
     tests: {
       map: function(doc) {
-        if (doc.type === 'test') {
+        if (doc.type === 'test' && !doc.deleted) {
           emit([doc.source || doc.url, doc._id], doc);
         }
       }
